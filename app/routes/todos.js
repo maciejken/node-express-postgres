@@ -1,5 +1,4 @@
 const Todo = require('../models/todo');
-const logger = require('../../logger.js');
 
 function getTodos(res) {
     Todo.find(function (err, todos) {
@@ -11,11 +10,6 @@ function getTodos(res) {
 }
 
 module.exports = function (app) {
-    // app.use(function (req, res, next) {
-    //     logger.debug('Using api/todos...');
-    //     next();
-    // });
-
     /**
      * @apiDefine ApiTodos
      * @apiSuccess {Object} todos List of todos

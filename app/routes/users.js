@@ -1,12 +1,7 @@
 const User = require('../models/user');
-const logger = require('../../logger.js');
+const logger = require('../../libs/logger.js');
 
 module.exports = function (app) {
-    // app.use(function (req, res, next) {
-    //     logger.debug('Using api/users...');
-    //     next();
-    // });
-
     /**
      * @api {get} /api/setup Create sample admin user
      * @apiGroup Users

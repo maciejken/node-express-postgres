@@ -4,11 +4,11 @@ const app = express();
 
 consign()
     .include('config/config.js')
-    .then('db.js')
-    // .then('auth.js')
-    .then('middlewares.js')
+    .then('libs/db.js')
+    // .then('libs/auth.js')
+    .then('libs/middlewares.js')
     .then('app/routes')
-    .then('boot.js')
+    .then('libs/boot.js')
     .into(app);
 
 module.exports = app;
