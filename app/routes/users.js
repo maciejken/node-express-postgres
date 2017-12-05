@@ -1,3 +1,4 @@
+'use strict';
 const User = require('../models/user');
 const logger = require('../../libs/logger.js');
 
@@ -22,7 +23,7 @@ module.exports = function (app) {
                 res.send(err);
             }
 
-            logger.debug('User saved successfully');
+            logger.info('User saved successfully');
             res.json({success: true});
         });
     });

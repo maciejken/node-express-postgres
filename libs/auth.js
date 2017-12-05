@@ -1,8 +1,9 @@
+'use strict';
 const User = require('../app/models/user');
-const jwt    = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 module.exports = function (app) {
-    const cfg = app.config.config;
+    const cfg = app.config.config.auth;
 
     app.post('/authenticate', function (req, res) {
         User.findOne({
@@ -39,16 +40,16 @@ module.exports = function (app) {
         });
     });
 
-    app.use(function(req, res, next) {
+    app.use(function (req, res, next) {
         // check header or url parameters or post parameters for token
         const token = req.body.token || req.query.token || req.headers['x-access-token'];
 
         // decode token
         if (token) {
             // verifies secret and checks exp
-            jwt.verify(token, cfg.jwtSecret, function(err, decoded) {
+            jwt.verify(token, cfg.jwtSecret, function (err, decoded) {
                 if (err) {
-                    return res.json({ success: false, message: 'Failed to authenticate token.' });
+                    return res.json({success: false, message: 'Failed to authenticate token.'});
                 } else {
                     // if everything is good, save to request for use in other routes
                     req.decoded = decoded;
