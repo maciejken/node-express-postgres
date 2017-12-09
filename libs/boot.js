@@ -1,6 +1,7 @@
 'use strict';
 const logger = require('./logger.js');
 const https = require('https');
+const http = require('http');
 const fs = require('fs');
 
 module.exports = function (app) {
@@ -13,6 +14,12 @@ module.exports = function (app) {
             rejectUnauthorized: false
         };
         https.createServer(credential, app)
+            .listen(port, function () {
+                logger.info('App listening on port ' + port);
+            });
+    } else {
+        const port = app.get('portHttp');
+        http.createServer(app)
             .listen(port, function () {
                 logger.info('App listening on port ' + port);
             });

@@ -10,10 +10,10 @@ const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
 const methodOverride = require('method-override');
 const session = require('express-session');
+const errorHandler = require('errorhandler');
 const path = require('path');
 const logger = require('./logger.js');
 const passport = require('passport');
-require('./passport')(passport);
 
 const portHttp = process.env.PORT_HTTP || 8080;
 const portHttps = process.env.PORT_HTTPS || 8081;
@@ -65,4 +65,12 @@ module.exports = function (app) {
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(flash());
+    if (process.env.NODE_ENV !== 'test') {
+        app.use(errorHandler({log: errorNotification}));
+    }
+
+    function errorNotification(err, str, req) {
+        const title = 'Error in ' + req.method + ' ' + req.url;
+        logger.error(title, str);
+    }
 };
