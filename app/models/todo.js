@@ -1,12 +1,39 @@
 'use strict';
-const mongoose = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate');
-const Schema = mongoose.Schema;
 
-const TodoSchema = new Schema({
-    text: {type: String, default: ''}
-});
+module.exports = function (sequelize, DataTypes) {
+    const Todo = sequelize.define('Todo', {
+        id: {
+            allowNull: false,
+            autoIncrement: true,
+            primaryKey: true,
+            type: DataTypes.INTEGER,
+        },
+        title: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        description: DataTypes.TEXT,
+        complete: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        userId: {
+            type: DataTypes.INTEGER,
+            onDelete: 'CASCADE',
+            references: {
+                model: 'Todos',
+                key: 'id',
+                as: 'userId'
+            },
+        }
+    });
 
-TodoSchema.plugin(mongoosePaginate);
+    Todo.associate = function (models) {
+        Todo.belongsTo(models.User, {
+            foreignKey: 'userId',
+            onDelete: 'CASCADE'
+        });
+    };
 
-module.exports = mongoose.model('Todo', TodoSchema);
+    return Todo;
+};

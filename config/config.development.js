@@ -1,10 +1,6 @@
 'use strict';
+require('dotenv').config({path: './config/.env.development'});
+
 module.exports = {
-    database: {
-        remoteUrl: '',
-        localUrl: 'mongodb://localhost/meanstacktutorials'
-    },
-    auth: {
-        jwtSecret: 'topSecretSecret'
-    }
+    secretKey: 'topSecretSecret'
 };

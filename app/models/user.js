@@ -1,14 +1,51 @@
 'use strict';
-const mongoose = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate');
-const Schema = mongoose.Schema;
 
-const UserSchema = new Schema({
-    name: String,
-    password: String,
-    admin: Boolean
-});
+module.exports = function (sequelize, DataTypes) {
+    const User = sequelize.define('User', {
+        id: {
+            autoIncrement: true,
+            primaryKey: true,
+            type: DataTypes.INTEGER
+        },
+        firstname: {
+            type: DataTypes.STRING,
+            notEmpty: true
+        },
+        lastname: {
+            type: DataTypes.STRING,
+            notEmpty: true
+        },
+        username: {
+            type: DataTypes.TEXT
+        },
+        about: {
+            type: DataTypes.TEXT
+        },
+        email: {
+            type: DataTypes.STRING,
+            validate: {
+                isEmail: true
+            }
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        last_login: {
+            type: DataTypes.DATE
+        },
+        status: {
+            type: DataTypes.ENUM('active', 'inactive'),
+            defaultValue: 'active'
+        }
+    });
 
-UserSchema.plugin(mongoosePaginate);
+    User.associate = function(models) {
+        User.hasMany(models.Todo, {
+            foreignKey: 'userId',
+            as: 'todos'
+        });
+    };
 
-module.exports = mongoose.model('User', UserSchema);
+    return User;
+};

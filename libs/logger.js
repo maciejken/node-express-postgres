@@ -1,6 +1,6 @@
 'use strict';
-const winston = require("winston");
-const fs = require("fs");
+const logger = require('winston');
+const fs = require('fs');
 
 const env = process.env.NODE_ENV || 'development';
 const level = env === 'development' ? 'debug' : 'info';
@@ -12,22 +12,21 @@ if (!fs.existsSync('logs')) {
     fs.mkdirSync('logs');
 }
 
-const logger = new winston.Logger({
-    transports: [
-        new winston.transports.File({
-            colorize: true,
-            level: level,
-            filename: 'logs/server.log',
-            maxsize: 1024000,
-            maxFiles: 5,
-            timestamp: tsFormat
-        }),
-        new winston.transports.Console({
-            colorize: true,
-            level: 'info',
-            timestamp: tsFormat
-        })
-    ]
-});
+logger.remove(logger.transports.Console);
+logger.add(logger.transports.Console, {
+        colorize: true,
+        level: 'info',
+        timestamp: tsFormat
+    }
+);
+logger.add(logger.transports.File, {
+        colorize: true,
+        level: level,
+        filename: 'logs/server.log',
+        maxsize: 1024000,
+        maxFiles: 5,
+        timestamp: tsFormat
+    }
+);
 
 module.exports = logger;

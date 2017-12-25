@@ -1,13 +1,13 @@
 'use strict';
 const cluster = require('cluster');
 const os = require('os');
-const logger = require('./libs/logger');
+const logger = require('winston');
 
 const CPUS = os.cpus();
 if (cluster.isMaster) {
     CPUS.forEach(() => cluster.fork());
     cluster.on('listening', worker => {
-        logger.log('Cluster %d connected', worker.process.pid);
+        logger.info('Cluster %d connected', worker.process.pid);
     });
     cluster.on('disconnect', worker => {
         logger.warn('Cluster %d disconnected', worker.process.pid);

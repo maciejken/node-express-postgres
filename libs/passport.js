@@ -1,7 +1,9 @@
 'use strict';
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('../app/models/user_new');
+const User = require('../app/models/index.js').User;
+const bCrypt = require('bcrypt-nodejs');
+const logger = require('winston');
 
 module.exports = function () {
     passport.serializeUser(function (user, done) {
@@ -9,8 +11,12 @@ module.exports = function () {
     });
 
     passport.deserializeUser(function (id, done) {
-        User.findById(id, function (err, user) {
-            done(err, user);
+        User.findById(id).then(function (user) {
+            if (user) {
+                done(null, user.get());
+            } else {
+                done(user.errors, null);
+            }
         });
     });
 
@@ -20,26 +26,33 @@ module.exports = function () {
             passReqToCallback: true
         },
         function (req, email, password, done) {
-            process.nextTick(function () {
-                User.findOne({'local.email': email}, function (err, user) {
-                    if (err) {
-                        return done(err);
-                    }
-                    if (user) {
-                        return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
-                    } else {
-                        const newUser = new User();
-                        newUser.local.email = email;
-                        newUser.local.password = newUser.generateHash(password);
+            const generateHash = function (password) {
+                return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
+            };
 
-                        newUser.save(function (err) {
-                            if (err) {
-                                throw err;
-                            }
-                            return done(null, newUser, req.flash('loginMessage', 'Created new account.'));
-                        });
-                    }
-                });
+            User.findOne({where: {email: email}}).then(function (user) {
+                if (user) {
+                    logger.info('That email is already taken');
+                    return done(null, false, {message: 'That email is already taken'});
+                } else {
+                    const data =
+                        {
+                            email: email,
+                            password: generateHash(password),
+                            firstname: req.body.firstname,
+                            lastname: req.body.lastname
+                        };
+
+                    User.create(data).then(function (newUser) {
+                        if (!newUser) {
+                            return done(null, false);
+                        }
+                        if (newUser) {
+                            logger.info('Created new user:', newUser.get());
+                            return done(null, newUser);
+                        }
+                    });
+                }
             });
         })
     );
@@ -50,19 +63,24 @@ module.exports = function () {
             passReqToCallback: true
         },
         function (req, email, password, done) {
-            User.findOne({'local.email': email}, function (err, user) {
-                if (err) {
-                    return done(err);
-                }
-                if (!user) {
-                    return done(null, false, req.flash('loginMessage', 'Incorrect username'));
-                }
-                if (!user.validPassword(password)) {
-                    return done(null, false, req.flash('loginMessage', 'Incorrect password.'));
-                }
-                return done(null, user);
-            });
+            const isValidPassword = function (userpass, password) {
+                return bCrypt.compareSync(password, userpass);
+            };
 
+            User.findOne({where: {email: email}}).then(function (user) {
+                if (!user) {
+                    logger.info('Incorrect username');
+                    return done(null, false, {message: 'Incorrect username'});
+                }
+                if (!isValidPassword(user.password, password)) {
+                    logger.info('Incorrect password');
+                    return done(null, false, {message: 'Incorrect password'});
+                }
+                return done(null, user.get());
+            }).catch(function (err) {
+                logger.error('Error:', err);
+                return done(null, false, {message: 'Something went wrong with your login. Error:' + err});
+            });
         })
     );
 };

@@ -1,6 +1,6 @@
 'use strict';
 const passport = require('passport');
-const logger = require('../../libs/logger');
+const logger = require('winston');
 
 module.exports = function (app) {
 
@@ -42,9 +42,10 @@ module.exports = function (app) {
 
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
+        logger.info('Successfully authenticated!');
         return next();
     } else {
-        logger.info("Not authenticated");
+        logger.info('Not authenticated!');
         res.redirect('/');
     }
 }

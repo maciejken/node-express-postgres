@@ -1,27 +1,84 @@
 'use strict';
-const logger = require('./logger.js');
+const logger = require('winston');
 const https = require('https');
 const http = require('http');
 const fs = require('fs');
 
 module.exports = function (app) {
+    let port;
+    let server;
     if (process.env.NODE_ENV !== 'test') {
-        const port = app.get('portHttps');
+        port = normalizePort(process.env.PORT_HTTPS || 8081);
         const credential = {
             key: fs.readFileSync('private.key', 'utf8'),
             cert: fs.readFileSync('public.crt', 'utf8'),
             requestCert: false,
             rejectUnauthorized: false
         };
-        https.createServer(credential, app)
-            .listen(port, function () {
-                logger.info('App listening on port ' + port);
-            });
+        server = https.createServer(credential, app);
     } else {
-        const port = app.get('portHttp');
-        http.createServer(app)
-            .listen(port, function () {
-                logger.info('App listening on port ' + port);
-            });
+        port = normalizePort(process.env.PORT_HTTP || 8080);
+        server = http.createServer(app);
+    }
+    server
+        .listen(port)
+        .on('error', onError)
+        .on('listening', onListening);
+
+    /**
+     * Normalize a port into a number, string, or false.
+     */
+    function normalizePort(val) {
+        const port = parseInt(val, 10);
+
+        if (isNaN(port)) {
+            // named pipe
+            return val;
+        }
+
+        if (port >= 0) {
+            // port number
+            return port;
+        }
+
+        return false;
+    }
+
+    /**
+     * Event listener for HTTP server "error" event.
+     */
+    function onError(error) {
+        if (error.syscall !== 'listen') {
+            throw error;
+        }
+
+        const bind = typeof port === 'string'
+            ? 'Pipe ' + port
+            : 'Port ' + port;
+
+        // handle specific listen errors with friendly messages
+        switch (error.code) {
+            case 'EACCES':
+                logger.error(bind, 'requires elevated privileges');
+                process.exit(1);
+                break;
+            case 'EADDRINUSE':
+                logger.error(bind, 'is already in use');
+                process.exit(1);
+                break;
+            default:
+                throw error;
+        }
+    }
+
+    /**
+     * Event listener for HTTP server "listening" event.
+     */
+    function onListening() {
+        const addr = server.address();
+        const bind = typeof addr === 'string'
+            ? 'pipe ' + addr
+            : 'port ' + addr.port;
+        logger.info('App listening on', bind);
     }
 };
