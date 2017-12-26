@@ -47,6 +47,19 @@ module.exports = function (app) {
     app.use(bodyParser.urlencoded({'extended': 'true'}));
     app.use(cookieParser());
     app.use(methodOverride('X-HTTP-Method-Override'));
+    app.use(function (req, res, next) {
+        if (process.env.NODE_ENV === 'production') {
+            if (req.headers['x-forwarded-proto'] !== 'https') {
+                res.redirect(302, 'https://' + req.hostname + req.originalUrl);
+            }
+            else {
+                next();
+            }
+        }
+        else {
+            next();
+        }
+    };
     app.use(favicon(path.join(__dirname, '/../public', 'favicon.ico')));
     app.use('/public', express.static(__dirname + '/../public'));
     app.use('/api', express.static(__dirname + '/../apidoc'));
