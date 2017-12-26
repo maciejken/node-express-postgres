@@ -7,7 +7,7 @@ const fs = require('fs');
 module.exports = function (app) {
     let port;
     let server;
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'test') {
         port = normalizePort(process.env.PORT || process.env.PORT_HTTPS || 8081);
         const credential = {
             key: fs.readFileSync('private.key', 'utf8'),
