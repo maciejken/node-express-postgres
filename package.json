@@ -1,5 +1,5 @@
 {
-  "name": "node-express-server",
+  "name": "node-express-postgres",
   "version": "0.0.1",
   "description": "Online shop",
   "main": "server.js",
@@ -7,10 +7,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pamigomp/node-express-server.git"
+    "url": "git+https://github.com/pamigomp/node-express-postgres.git"
   },
   "scripts": {
-    "start": "npm run apidoc && npm run dev",
+    "start": "node server.js",
+    "start-dev": "npm run apidoc && npm run dev",
     "apidoc": "apidoc -i app/routes/ -o apidoc",
     "cluster": "node cluster.js",
     "dev": "nodemon server.js",
