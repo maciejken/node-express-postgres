@@ -3,9 +3,7 @@ const express = require('express');
 const consign = require('consign');
 const app = express();
 
-let cwd = process.env.NODE_ENV === 'production' ? process.cwd() : process.cwd();
-
-consign({cwd: cwd})
+consign()
     .include('libs/logger.js')
     .then('config/config.js')
     .then('libs/passport.js')
