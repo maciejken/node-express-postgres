@@ -3,7 +3,7 @@ const express = require('express');
 const consign = require('consign');
 const app = express();
 
-let cwd = process.env.NODE_ENV === 'production' ? process.cwd()+"/app" : process.cwd();
+let cwd = process.env.NODE_ENV === 'production' ? process.cwd() : process.cwd();
 
 consign({cwd: cwd})
     .include('libs/logger.js')
