@@ -49,4 +49,3 @@ npm-debug.log
 .idea/
 public/dist/
 apidoc/
-config/.env.*
