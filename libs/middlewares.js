@@ -59,7 +59,7 @@ module.exports = function (app) {
         else {
             next();
         }
-    };
+    });
     app.use(favicon(path.join(__dirname, '/../public', 'favicon.ico')));
     app.use('/public', express.static(__dirname + '/../public'));
     app.use('/api', express.static(__dirname + '/../apidoc'));
