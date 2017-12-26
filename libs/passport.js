@@ -33,7 +33,7 @@ module.exports = function () {
             User.findOne({where: {email: email}}).then(function (user) {
                 if (user) {
                     logger.info('That email is already taken');
-                    return done(null, false, {message: 'That email is already taken'});
+                    return done(null, false, req.flash('signupMessage', 'That email is already taken'));
                 } else {
                     const data =
                         {
@@ -49,7 +49,7 @@ module.exports = function () {
                         }
                         if (newUser) {
                             logger.info('Created new user:', newUser.get());
-                            return done(null, newUser);
+                            return done(null, newUser, req.flash('loginMessage', 'Created new user'));
                         }
                     });
                 }
@@ -70,16 +70,16 @@ module.exports = function () {
             User.findOne({where: {email: email}}).then(function (user) {
                 if (!user) {
                     logger.info('Incorrect username');
-                    return done(null, false, {message: 'Incorrect username'});
+                    return done(null, false, req.flash('loginMessage', 'Incorrect username'));
                 }
                 if (!isValidPassword(user.password, password)) {
                     logger.info('Incorrect password');
-                    return done(null, false, {message: 'Incorrect password'});
+                    return done(null, false, req.flash('loginMessage', 'Incorrect password'));
                 }
                 return done(null, user.get());
             }).catch(function (err) {
                 logger.error('Error:', err);
-                return done(null, false, {message: 'Something went wrong with your login. Error:' + err});
+                return done(null, false, req.flash('loginMessage', 'Something went wrong with your login'));
             });
         })
     );

@@ -3,10 +3,6 @@ const todosController = require('../controllers/index.js').todos;
 
 module.exports = function (app) {
 
-    app.get('/api', function (req, res, next) {
-        res.render('index', {title: 'Express'});
-    });
-
     app.post('/api/users', usersController.createUser);
     app.get('/api/users', usersController.getUsers);
     app.get('/api/users/todos', usersController.getUsersWithTodos);
