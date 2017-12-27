@@ -6,11 +6,11 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
-            type: DataTypes.INTEGER,
+            type: DataTypes.INTEGER
         },
         title: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         description: DataTypes.TEXT,
         complete: {
@@ -24,7 +24,7 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'Users',
                 key: 'id',
                 as: 'userId'
-            },
+            }
         }
     });
 

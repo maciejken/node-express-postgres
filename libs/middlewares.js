@@ -16,6 +16,8 @@ const logger = require('winston');
 const passport = require('passport');
 
 module.exports = function (app) {
+    const cfg = app.config.config;
+
     app.use(helmet());
     app.use(cors({
         origin: ['http://localhost:8081'],
@@ -62,7 +64,6 @@ module.exports = function (app) {
     app.use('/public', express.static(__dirname + '/../public'));
     app.use('/api', express.static(__dirname + '/../apidoc'));
     app.set('view engine', 'ejs');
-    const cfg = app.config.config;
     app.use(session({
         secret: cfg.secretKey,
         resave: true,

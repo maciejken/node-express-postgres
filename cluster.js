@@ -7,13 +7,13 @@ const CPUS = os.cpus();
 
 if (cluster.isMaster) {
     CPUS.forEach(() => cluster.fork());
-    cluster.on('listening', worker => {
+    cluster.on('listening', function(worker) {
         logger.info('Cluster %d connected', worker.process.pid);
     });
-    cluster.on('disconnect', worker => {
+    cluster.on('disconnect', function(worker) {
         logger.warn('Cluster %d disconnected', worker.process.pid);
     });
-    cluster.on('exit', worker => {
+    cluster.on('exit', function(worker) {
         logger.warn('Cluster %d is dead', worker.process.pid);
         cluster.fork();
     });

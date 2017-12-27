@@ -81,8 +81,8 @@ module.exports = function () {
                 } else {
                     return user.update({
                         lastLogin: new Date()
-                    }).then(function (user) {
-                        return done(null, user.get());
+                    }).then(function (updatedUser) {
+                        return done(null, updatedUser.get());
                     }).catch(function (err) {
                         logger.error('Error:', err);
                         return done(null, false, req.flash('loginMessage', 'Something went wrong with your login'));

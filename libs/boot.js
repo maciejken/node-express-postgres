@@ -9,14 +9,13 @@ module.exports = function (app) {
     let server;
 
     if (process.env.NODE_ENV === 'test') {
-        port = normalizePort(process.env.PORT || process.env.PORT_HTTPS || 8081);
-
         const credential = {
             key: fs.readFileSync('private.key', 'utf8'),
             cert: fs.readFileSync('public.crt', 'utf8'),
             requestCert: false,
             rejectUnauthorized: false
         };
+        port = normalizePort(process.env.PORT || process.env.PORT_HTTPS || 8081);
         server = https.createServer(credential, app);
     } else {
         port = normalizePort(process.env.PORT || process.env.PORT_HTTP || 8080);

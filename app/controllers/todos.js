@@ -42,11 +42,11 @@ module.exports = {
         return Todo.findById(req.params.id).then(function (todo) {
             if (!todo) {
                 res.status(404).send({
-                    message: 'Todo Not Found',
+                    message: 'Todo Not Found'
                 });
             } else {
-                return todo.update(req.body, {fields: Object.keys(req.body)}).then(function (todo) {
-                    res.status(200).send(todo);
+                return todo.update(req.body, {fields: Object.keys(req.body)}).then(function (updatedTodo) {
+                    res.status(200).send(updatedTodo);
                 }).catch(function (error) {
                     res.status(400).send(error);
                 });
@@ -60,7 +60,7 @@ module.exports = {
         return Todo.findById(req.params.id).then(function (todo) {
             if (!todo) {
                 res.status(404).send({
-                    message: 'Todo Not Found',
+                    message: 'Todo Not Found'
                 });
             } else {
                 return todo.destroy().then(function () {

@@ -1,29 +1,29 @@
 'use strict';
 module.exports = {
-    up: (queryInterface, Sequelize) =>
-        queryInterface.createTable('Todos', {
+    up: function (queryInterface, Sequelize) {
+        return queryInterface.createTable('Todos', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER,
+                type: Sequelize.INTEGER
             },
             title: {
                 type: Sequelize.STRING,
-                allowNull: false,
+                allowNull: false
             },
             description: Sequelize.TEXT,
             complete: {
                 type: Sequelize.BOOLEAN,
-                defaultValue: false,
+                defaultValue: false
             },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE,
+                type: Sequelize.DATE
             },
             updatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE,
+                type: Sequelize.DATE
             },
             userId: {
                 type: Sequelize.INTEGER,
@@ -32,9 +32,12 @@ module.exports = {
                 references: {
                     model: 'Users',
                     key: 'id',
-                    as: 'userId',
-                },
+                    as: 'userId'
+                }
             }
-        }),
-    down: (queryInterface /* , Sequelize */) => queryInterface.dropTable('Todos'),
+        });
+    },
+    down: function (queryInterface, Sequelize) {
+        return queryInterface.dropTable('Todos');
+    }
 };

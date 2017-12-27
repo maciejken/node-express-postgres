@@ -26,7 +26,7 @@ module.exports = {
         return User.findAll({
             include: [{
                 model: Todo,
-                as: 'todos',
+                as: 'todos'
             }],
             order: [
                 ['createdAt', 'DESC'],
@@ -57,8 +57,8 @@ module.exports = {
         return User.findById(req.params.id, {
                 include: [{
                     model: Todo,
-                    as: 'todos',
-                }],
+                    as: 'todos'
+                }]
             }
         ).then(function (user) {
             if (!user) {
@@ -77,11 +77,11 @@ module.exports = {
         return User.findById(req.params.id).then(function (user) {
             if (!user) {
                 res.status(404).send({
-                    message: 'Todo Not Found',
+                    message: 'Todo Not Found'
                 });
             } else {
-                return user.update(req.body, {fields: Object.keys(req.body)}).then(function (user) {
-                    res.status(200).send(user);
+                return user.update(req.body, {fields: Object.keys(req.body)}).then(function (updatedUser) {
+                    res.status(200).send(updatedUser);
                 }).catch(function (error) {
                     res.status(400).send(error);
                 });
