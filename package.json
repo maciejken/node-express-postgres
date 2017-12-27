@@ -1,6 +1,6 @@
 {
   "name": "node-express-postgres",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A starter project for Node application with express, postgres and sequelize",
   "main": "server.js",
   "keywords": [

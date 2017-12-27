@@ -50,7 +50,7 @@ module.exports = function (app) {
     app.use(function (req, res, next) {
         if (process.env.NODE_ENV === 'production') {
             if (req.headers['x-forwarded-proto'] !== 'https') {
-                res.redirect(302, 'https://' + req.hostname + req.originalUrl);
+                res.redirect('https://' + req.hostname + req.originalUrl);
             } else {
                 next();
             }

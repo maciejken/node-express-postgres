@@ -3,6 +3,8 @@ const todosController = require('../controllers/index.js').todos;
 
 module.exports = function (app) {
 
+    app.use('/api/*', isLoggedIn);
+
     app.post('/api/users', usersController.createUser);
     app.get('/api/users', usersController.getUsers);
     app.get('/api/users/todos', usersController.getUsersWithTodos);
@@ -30,11 +32,19 @@ module.exports = function (app) {
 
     // error handler
     // no stacktraces leaked to user unless in development environment
-    app.use(function (err, req, res) {
+    app.use(function (err, req, res, next) {
         res.status(err.status || 500).json({
             status: 'error',
             message: err.message,
-            error: (process.env.NODE_ENV === 'development') ? err : {}
+            error: (process.env.NODE_ENV === 'development') ? err.stack : {}
         });
     });
 };
+
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+        res.status(401).send({message: "Unauthorized"});
+    }
+}

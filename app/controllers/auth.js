@@ -9,7 +9,7 @@ module.exports = {
     },
 
     signup(req, res) {
-        return res.render('signup.ejs', {message: req.flash('loginMessage')});
+        return res.render('signup.ejs', {message: req.flash('signupMessage')});
     },
 
     profile(req, res) {

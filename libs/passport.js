@@ -47,10 +47,16 @@ module.exports = function () {
                         }
                         if (newUser) {
                             logger.info('Created new user:', newUser.get());
-                            return done(null, newUser, req.flash('loginMessage', 'Created new user'));
+                            return done(null, newUser, req.flash('signupMessage', 'Created new user'));
                         }
+                    }).catch(function (err) {
+                        logger.error('Error:', err);
+                        return done(null, false, req.flash('signupMessage', 'Something went wrong with your signup'));
                     });
                 }
+            }).catch(function (err) {
+                logger.error('Error:', err);
+                return done(null, false, req.flash('signupMessage', 'Something went wrong with your signup'));
             });
         })
     );

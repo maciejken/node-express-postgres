@@ -5,29 +5,37 @@ const authController = require('../controllers/index.js').auth;
 
 module.exports = function (app) {
 
-    app.get('/', authController.index);
-    app.get('/login', authController.login);
-    app.post('/login', passport.authenticate('local-login', {
+    app.get('/', isLoggedOut, authController.index);
+    app.get('/login', isLoggedOut, authController.login);
+    app.post('/login', isLoggedOut, passport.authenticate('local-login', {
         successRedirect: '/profile',
         failureRedirect: '/login',
         failureFlash: true
     }));
-    app.get('/signup', authController.signup);
-    app.post('/signup', passport.authenticate('local-signup', {
+    app.get('/signup', isLoggedOut, authController.signup);
+    app.post('/signup', isLoggedOut, passport.authenticate('local-signup', {
         successRedirect: '/profile',
         failureRedirect: '/signup',
         failureFlash: true
     }));
     app.get('/profile', isLoggedIn, authController.profile);
-    app.get('/logout', authController.logout);
+    app.get('/logout', isLoggedIn, authController.logout);
 };
 
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
-        logger.info('Successfully authenticated!');
-        return next();
+        next();
     } else {
-        logger.info('Not authenticated!');
+        logger.info('Unauthenticated! Redirecting to home page');
         res.redirect('/');
+    }
+}
+
+function isLoggedOut(req, res, next) {
+    if (req.isUnauthenticated()) {
+        next();
+    } else {
+        logger.info('Authenticated! Redirecting to profile page');
+        res.redirect('/profile');
     }
 }
