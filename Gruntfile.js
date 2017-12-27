@@ -2,10 +2,19 @@
 module.exports = function(grunt) {
 
     grunt.initConfig({
-
+        pkg: grunt.file.readJSON('package.json'),
         // JS TASKS ================================================================
         // check all js files for errors
         jshint: {
+            options: {
+                jshintrc: '.jshintrc'
+            },
+            all: ['public/src/js/**/*.js']
+        },
+        jscs: {
+            options: {
+                config: '.jscsrc'
+            },
             all: ['public/src/js/**/*.js']
         },
 
@@ -73,8 +82,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-nodemon');
+    grunt.loadNpmTasks('grunt-jscs');
     grunt.loadNpmTasks('grunt-concurrent');
 
-    grunt.registerTask('default', ['less', 'cssmin', 'jshint', 'uglify', 'concurrent']);
+    grunt.registerTask('default', ['less', 'cssmin', 'jshint', 'jscs', 'uglify', 'concurrent']);
 
 };

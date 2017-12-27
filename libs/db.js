@@ -4,8 +4,8 @@ const models = require('./../app/models');
 
 module.exports = function () {
     models.sequelize.sync().then(function () {
-        logger.info('Database successfully run')
+        logger.info('Database successfully run');
     }).catch(function (err) {
-        logger.error(err, 'Something went wrong with the Database Update!')
+        logger.error(err, 'Something went wrong with the Database Update!');
     });
 };

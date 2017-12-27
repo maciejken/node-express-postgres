@@ -24,13 +24,13 @@ module.exports = function (app) {
     }));
     app.use(morgan('dev', {
         skip: function (req, res) {
-            return res.statusCode < 400
+            return res.statusCode < 400;
         },
         stream: process.stderr
     }));
     app.use(morgan('dev', {
         skip: function (req, res) {
-            return res.statusCode >= 400
+            return res.statusCode >= 400;
         },
         stream: process.stdout
     }));
@@ -51,12 +51,10 @@ module.exports = function (app) {
         if (process.env.NODE_ENV === 'production') {
             if (req.headers['x-forwarded-proto'] !== 'https') {
                 res.redirect(302, 'https://' + req.hostname + req.originalUrl);
-            }
-            else {
+            } else {
                 next();
             }
-        }
-        else {
+        } else {
             next();
         }
     });
@@ -73,7 +71,8 @@ module.exports = function (app) {
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(flash());
-    if (process.env.NODE_ENV !== 'test') {
+
+    if (process.env.NODE_ENV === 'development') {
         app.use(errorHandler({log: errorNotification}));
     }
 

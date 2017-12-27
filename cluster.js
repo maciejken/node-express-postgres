@@ -4,6 +4,7 @@ const os = require('os');
 const logger = require('winston');
 
 const CPUS = os.cpus();
+
 if (cluster.isMaster) {
     CPUS.forEach(() => cluster.fork());
     cluster.on('listening', worker => {
@@ -15,7 +16,7 @@ if (cluster.isMaster) {
     cluster.on('exit', worker => {
         logger.warn('Cluster %d is dead', worker.process.pid);
         cluster.fork();
-    })
+    });
 } else {
-    require('./server.js')
+    require('./server.js');
 }

@@ -35,13 +35,11 @@ module.exports = function () {
                     logger.info('That email is already taken');
                     return done(null, false, req.flash('signupMessage', 'That email is already taken'));
                 } else {
-                    const data =
-                        {
-                            email: email,
-                            password: generateHash(password),
-                            firstname: req.body.firstname,
-                            lastname: req.body.lastname
-                        };
+                    const data = {
+                        email: email,
+                        password: generateHash(password),
+                        lastLogin: new Date()
+                    };
 
                     User.create(data).then(function (newUser) {
                         if (!newUser) {
@@ -71,12 +69,19 @@ module.exports = function () {
                 if (!user) {
                     logger.info('Incorrect username');
                     return done(null, false, req.flash('loginMessage', 'Incorrect username'));
-                }
-                if (!isValidPassword(user.password, password)) {
+                } else if (!isValidPassword(user.password, password)) {
                     logger.info('Incorrect password');
                     return done(null, false, req.flash('loginMessage', 'Incorrect password'));
+                } else {
+                    return user.update({
+                        lastLogin: new Date()
+                    }).then(function (user) {
+                        return done(null, user.get());
+                    }).catch(function (err) {
+                        logger.error('Error:', err);
+                        return done(null, false, req.flash('loginMessage', 'Something went wrong with your login'));
+                    });
                 }
-                return done(null, user.get());
             }).catch(function (err) {
                 logger.error('Error:', err);
                 return done(null, false, req.flash('loginMessage', 'Something went wrong with your login'));

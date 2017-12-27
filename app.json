@@ -1,0 +1,33 @@
+{
+  "name": "node-express-postgres",
+  "description": "A starter project for Node application with express, postgres and sequelize",
+  "keywords": [
+    "Node.js",
+    "Node",
+    "express",
+    "template",
+    "seed",
+    "postgresql",
+    "postgres",
+    "heroku",
+    "sequelize",
+    "passport",
+    "winston"
+  ],
+  "repository": "https://github.com/pamigomp/node-express-postgres.git",
+  "success_url": "/",
+  "addons": [
+    {
+      "plan": "heroku-postgresql"
+    }
+  ],
+  "buildpacks": [],
+  "env": {
+    "NODE_ENV": {
+      "description": "Run as a production environment on Heroku",
+      "value": "production"
+    }
+  },
+  "formation": {},
+  "scripts": {}
+}

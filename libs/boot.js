@@ -7,8 +7,10 @@ const fs = require('fs');
 module.exports = function (app) {
     let port;
     let server;
+
     if (process.env.NODE_ENV === 'test') {
         port = normalizePort(process.env.PORT || process.env.PORT_HTTPS || 8081);
+
         const credential = {
             key: fs.readFileSync('private.key', 'utf8'),
             cert: fs.readFileSync('public.crt', 'utf8'),
@@ -52,9 +54,7 @@ module.exports = function (app) {
             throw error;
         }
 
-        const bind = typeof port === 'string'
-            ? 'Pipe ' + port
-            : 'Port ' + port;
+        const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
         // handle specific listen errors with friendly messages
         switch (error.code) {
@@ -76,9 +76,8 @@ module.exports = function (app) {
      */
     function onListening() {
         const addr = server.address();
-        const bind = typeof addr === 'string'
-            ? 'pipe ' + addr
-            : 'port ' + addr.port;
+        const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+
         logger.info('App listening on', bind);
     }
 };

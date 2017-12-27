@@ -7,22 +7,9 @@ module.exports = function (sequelize, DataTypes) {
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        firstname: {
-            type: DataTypes.STRING,
-            notEmpty: true
-        },
-        lastname: {
-            type: DataTypes.STRING,
-            notEmpty: true
-        },
-        username: {
-            type: DataTypes.TEXT
-        },
-        about: {
-            type: DataTypes.TEXT
-        },
         email: {
             type: DataTypes.STRING,
+            allowNull: false,
             validate: {
                 isEmail: true
             }
@@ -31,17 +18,13 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
-        last_login: {
+        lastLogin: {
             type: DataTypes.DATE
-        },
-        status: {
-            type: DataTypes.ENUM('active', 'inactive'),
-            defaultValue: 'active'
         }
     });
 
     User.associate = function(models) {
-        User.hasMany(models.Todo, {
+        models.User.hasMany(models.Todo, {
             foreignKey: 'userId',
             as: 'todos'
         });

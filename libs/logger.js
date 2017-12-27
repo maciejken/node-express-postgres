@@ -2,8 +2,7 @@
 const logger = require('winston');
 const fs = require('fs');
 
-const env = process.env.NODE_ENV || 'development';
-const level = env === 'development' ? 'debug' : 'info';
+const level = process.env.LOG_LEVEL || 'debug';
 const tsFormat = function () {
     return (new Date()).toLocaleTimeString();
 };

@@ -21,7 +21,7 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             onDelete: 'CASCADE',
             references: {
-                model: 'Todos',
+                model: 'Users',
                 key: 'id',
                 as: 'userId'
             },
@@ -29,7 +29,7 @@ module.exports = function (sequelize, DataTypes) {
     });
 
     Todo.associate = function (models) {
-        Todo.belongsTo(models.User, {
+        models.Todo.belongsTo(models.User, {
             foreignKey: 'userId',
             onDelete: 'CASCADE'
         });
