@@ -1,5 +1,5 @@
 {
-  "name": "node-express-postgres",
+  "name": "node-express-postgres-template",
   "description": "A starter project for Node application with express, postgres and sequelize",
   "keywords": [
     "Node.js",
@@ -12,9 +12,10 @@
     "heroku",
     "sequelize",
     "passport",
-    "winston"
+    "winston",
+    "express-validator"
   ],
-  "repository": "https://github.com/pamigomp/node-express-postgres.git",
+  "repository": "https://github.com/pamigomp/node-express-postgres-template.git",
   "success_url": "/",
   "addons": [
     {

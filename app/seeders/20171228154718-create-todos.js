@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-    up: (queryInterface, Sequelize) => {
+    up: function (queryInterface, Sequelize) {
         return queryInterface.sequelize.query('SELECT id FROM "Users" WHERE email = \'test@test.pl\' ', {
             type: queryInterface.sequelize.QueryTypes.SELECT
         }).then(function (userId) {
@@ -14,7 +14,7 @@ module.exports = {
             }], {});
         });
     },
-    down: (queryInterface, Sequelize) => {
+    down: function (queryInterface, Sequelize) {
         return queryInterface.bulkDelete('Todos', [{
             title: 'Test Todo'
         }], {});

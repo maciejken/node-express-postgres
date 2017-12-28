@@ -2,7 +2,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('../app/models/index.js').User;
-const bCrypt = require('bcrypt-nodejs');
 const logger = require('winston');
 
 module.exports = function () {
@@ -11,7 +10,7 @@ module.exports = function () {
     });
 
     passport.deserializeUser(function (id, done) {
-        User.findById(id).then(function (user) {
+        return User.findById(id).then(function (user) {
             if (user) {
                 done(null, user.get());
             } else {
@@ -26,37 +25,32 @@ module.exports = function () {
             passReqToCallback: true
         },
         function (req, email, password, done) {
-            const generateHash = function (password) {
-                return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
-            };
-
-            User.findOne({where: {email: email}}).then(function (user) {
+            return User.findOne({where: {email: email}}).then(function (user) {
                 if (user) {
                     logger.info('That email is already taken');
-                    return done(null, false, req.flash('signupMessage', 'That email is already taken'));
+                    done(null, false, req.flash('signupMessage', 'That email is already taken'));
                 } else {
                     const data = {
                         email: email,
-                        password: generateHash(password),
+                        password: password,
                         lastLogin: new Date()
                     };
 
-                    User.create(data).then(function (newUser) {
+                    return User.create(data).then(function (newUser) {
                         if (!newUser) {
-                            return done(null, false);
-                        }
-                        if (newUser) {
+                            done(null, false);
+                        } else {
                             logger.info('Created new user:', newUser.get());
-                            return done(null, newUser, req.flash('signupMessage', 'Created new user'));
+                            done(null, newUser, req.flash('signupMessage', 'Created new user'));
                         }
                     }).catch(function (err) {
                         logger.error('Error:', err);
-                        return done(null, false, req.flash('signupMessage', 'Something went wrong with your signup'));
+                        done(null, false, req.flash('signupMessage', 'Something went wrong with your signup'));
                     });
                 }
             }).catch(function (err) {
                 logger.error('Error:', err);
-                return done(null, false, req.flash('signupMessage', 'Something went wrong with your signup'));
+                done(null, false, req.flash('signupMessage', 'Something went wrong with your signup'));
             });
         })
     );
@@ -67,30 +61,26 @@ module.exports = function () {
             passReqToCallback: true
         },
         function (req, email, password, done) {
-            const isValidPassword = function (userpass, password) {
-                return bCrypt.compareSync(password, userpass);
-            };
-
-            User.findOne({where: {email: email}}).then(function (user) {
+            return User.findOne({where: {email: email}}).then(function (user) {
                 if (!user) {
                     logger.info('Incorrect username');
-                    return done(null, false, req.flash('loginMessage', 'Incorrect username'));
-                } else if (!isValidPassword(user.password, password)) {
+                    done(null, false, req.flash('loginMessage', 'Incorrect username'));
+                } else if (!user.validatePassword(password)) {
                     logger.info('Incorrect password');
-                    return done(null, false, req.flash('loginMessage', 'Incorrect password'));
+                    done(null, false, req.flash('loginMessage', 'Incorrect password'));
                 } else {
                     return user.update({
                         lastLogin: new Date()
                     }).then(function (updatedUser) {
-                        return done(null, updatedUser.get());
+                        done(null, updatedUser.get());
                     }).catch(function (err) {
                         logger.error('Error:', err);
-                        return done(null, false, req.flash('loginMessage', 'Something went wrong with your login'));
+                        done(null, false, req.flash('loginMessage', 'Something went wrong with your login'));
                     });
                 }
             }).catch(function (err) {
                 logger.error('Error:', err);
-                return done(null, false, req.flash('loginMessage', 'Something went wrong with your login'));
+                done(null, false, req.flash('loginMessage', 'Something went wrong with your login'));
             });
         })
     );

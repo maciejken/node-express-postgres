@@ -10,7 +10,7 @@ module.exports = function (app) {
     app.get('/api/users/todos', usersController.getUsersWithTodos);
     app.get('/api/users/:id', usersController.getUser);
     app.get('/api/users/:id/todos', usersController.getUserWithTodos);
-    app.get('/api/users/:id', usersController.updateUser);
+    app.put('/api/users/:id', usersController.updateUser);
     app.delete('/api/users/:id', usersController.deleteUser);
 
     app.post('/api/todos', todosController.createTodo);
